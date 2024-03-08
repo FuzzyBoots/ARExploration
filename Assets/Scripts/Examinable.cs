@@ -32,11 +32,13 @@ public class Examinable : MonoBehaviour
 
     private void OnUnselect(SelectExitEventArgs arg0)
     {
+        Debug.Log($"Deselected {this.gameObject.name}");
         _manager.ClearExaminedObject();
     }
 
     private void OnSelect(SelectEnterEventArgs eventArgs)
     {
+        Debug.Log($"Selected {this.gameObject.name}");
         _manager.SetExaminedObject(this);
     }
 

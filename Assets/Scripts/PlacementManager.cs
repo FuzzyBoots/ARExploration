@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Linq;
+using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.XR.Interaction.Toolkit;
@@ -37,6 +38,10 @@ public class PlacementManager : MonoBehaviour
     {
         Debug.Log("Placed object?");
         string objectName = eventArgs?.placementObject?.name;
+        if (objectName.EndsWith("(Clone)"))
+        {
+            objectName = objectName.Remove(objectName.Length - 7);
+        }
         if (objectName != "") {
             Debug.Log($"Name: {objectName}");
             _placedObjects[objectName] = eventArgs.placementObject;
@@ -49,16 +54,12 @@ public class PlacementManager : MonoBehaviour
         SceneManager.LoadScene(sceneName);
     }
 
-    public void RegisterObject()
-    {
-
-    }
-
     public void HandleObject(string name)
     {
         if (validElements.Any(x => x.name == name))
         {
-            if (_placedObjects.Contains(name))
+            Debug.Log("Keys: " + _placedObjects.Keys.ToCommaSeparatedString());
+            if (_placedObjects.Contains(name + "(Clone)"))
             {
                 GameObject placed = (GameObject)_placedObjects[name];
                 Debug.Log($"Select {placed}");
@@ -66,6 +67,7 @@ public class PlacementManager : MonoBehaviour
                 {
                     // Select the item!
                     _gestureInteractor.StartManualInteraction(select);
+                    _gestureInteractor.EndManualInteraction();
                 }
             } else
             {
