@@ -9,27 +9,16 @@ using UnityEngine.XR.Interaction.Toolkit.AR;
 
 public class PlacementManager : MonoBehaviour
 {
-    [System.Serializable]
-    public struct placementEntry
-    {
-        public string name;
-        public GameObject prefab;
-    }
-
-    [SerializeField]
-    private placementEntry[] validElements;
-
     [SerializeField]
     private ARGestureInteractor _gestureInteractor;
 
-    Hashtable _placedObjects;
-
     [SerializeField] private ARPlacementInteractable _placementInteractable;
+
+    [SerializeField] private PrefabManager _prefabManager;
     
     // Start is called before the first frame update
     void Start()
     {
-        _placedObjects = new Hashtable();
         ARObjectPlacementEvent aRObjectPlacedEvent = _placementInteractable.objectPlaced;
         aRObjectPlacedEvent.AddListener(ObjectPlaced);
     }
@@ -37,47 +26,59 @@ public class PlacementManager : MonoBehaviour
     private void ObjectPlaced(ARObjectPlacementEventArgs eventArgs)
     {
         Debug.Log("Placed object?");
-        string objectName = eventArgs?.placementObject?.name;
-        if (objectName.EndsWith("(Clone)"))
-        {
-            objectName = objectName.Remove(objectName.Length - 7);
-        }
-        if (objectName != "") {
-            Debug.Log($"Name: {objectName}");
-            _placedObjects[objectName] = eventArgs.placementObject;
-        }
+        GameObject placed = eventArgs.placementObject;
+
+        _prefabManager.HouseObject(placed);
     }
 
     public void ResetScene(string sceneName)
     {
-        _placedObjects.Clear();
         SceneManager.LoadScene(sceneName);
     }
 
     public void HandleObject(string name)
     {
-        if (validElements.Any(x => x.name == name))
+        GameObject prefab = _prefabManager.GetExtantPrefab(name);
+        if (prefab != null)
         {
-            Debug.Log("Keys: " + _placedObjects.Keys.ToCommaSeparatedString());
-            if (_placedObjects.Contains(name + "(Clone)"))
+            Debug.Log($"Select {prefab}");
+            if (prefab.TryGetComponent<IXRSelectInteractable>(out IXRSelectInteractable select))
             {
-                GameObject placed = (GameObject)_placedObjects[name];
-                Debug.Log($"Select {placed}");
-                if (placed.TryGetComponent<IXRSelectInteractable>(out IXRSelectInteractable select))
-                {
-                    // Select the item!
-                    _gestureInteractor.StartManualInteraction(select);
-                    _gestureInteractor.EndManualInteraction();
-                }
-            } else
+                // Select the item!
+                _gestureInteractor.StartManualInteraction(select);
+                _gestureInteractor.EndManualInteraction();
+            }
+        } else
+        {
+            prefab = _prefabManager.GetPlaceableObject(name);
+            if (prefab != null)
             {
-                GameObject toBePlaced = validElements.First(x => x.name == name).prefab;
-                _placementInteractable.placementPrefab = toBePlaced;
+                _placementInteractable.placementPrefab = prefab;
             }
         }
-        else
-        {
-            Debug.LogError($"Invalid object name {name} provided to PlacementManager");
-        }
+
+        //if (validElements.Any(x => x.name == name))
+        //{
+        //    Debug.Log("Keys: " + _placedObjects.Keys.ToCommaSeparatedString());
+        //    if (_placedObjects.Contains(name))
+        //    {
+        //        GameObject placed = (GameObject)_placedObjects[name];
+        //        Debug.Log($"Select {placed}");
+        //        if (placed.TryGetComponent<IXRSelectInteractable>(out IXRSelectInteractable select))
+        //        {
+        //            // Select the item!
+        //            _gestureInteractor.StartManualInteraction(select);
+        //            _gestureInteractor.EndManualInteraction();
+        //        }
+        //    } else
+        //    {
+        //        GameObject toBePlaced = validElements.First(x => x.name == name).prefab;
+        //        _placementInteractable.placementPrefab = toBePlaced;
+        //    }
+        //}
+        //else
+        //{
+        //    Debug.LogError($"Invalid object name {name} provided to PlacementManager");
+        //}
     }
 }
