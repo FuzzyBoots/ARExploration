@@ -12,7 +12,6 @@ GameObject:
   - component: {fileID: -5126548564457633431}
   - component: {fileID: 7981475719820334937}
   - component: {fileID: -2147274585140243704}
-  - component: {fileID: 2915029682705316545}
   m_Layer: 0
   m_Name: Zombie
   m_TagString: Untagged
@@ -88,36 +87,36 @@ MonoBehaviour:
   m_SelectEntered:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: -6525388691070895422, guid: 5fa42eaf90313dc4aac89a83e7ecc139, type: 3}
-        m_TargetAssemblyTypeName: Examinable, Assembly-CSharp
-        m_MethodName: SetSelection
-        m_Mode: 1
+      - m_Target: {fileID: 8544966402732773731}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
   m_SelectExited:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 2915029682705316545}
-        m_TargetAssemblyTypeName: Examinable, Assembly-CSharp
-        m_MethodName: RequestUnexamine
-        m_Mode: 1
+      - m_Target: {fileID: 8544966402732773731}
+        m_TargetAssemblyTypeName: UnityEngine.Behaviour, UnityEngine
+        m_MethodName: set_enabled
+        m_Mode: 6
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
           m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
           m_IntArgument: 0
           m_FloatArgument: 0
           m_StringArgument: 
-          m_BoolArgument: 0
+          m_BoolArgument: 1
         m_CallState: 2
-      - m_Target: {fileID: 7971361856269867115}
+      - m_Target: {fileID: 8544966402732773731}
         m_TargetAssemblyTypeName: UnityEngine.Animator, UnityEngine
-        m_MethodName: 
+        m_MethodName: Play
         m_Mode: 5
         m_Arguments:
           m_ObjectArgument: {fileID: 0}
@@ -399,20 +398,6 @@ MonoBehaviour:
   m_FallbackLayerMask:
     serializedVersion: 2
     m_Bits: 0
---- !u!114 &2915029682705316545
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 7971361856269867115}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: a3517c92d7c9af64ba02dfc57f055d09, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _manager: {fileID: 0}
-  examineScaleOffset: 0.2
 --- !u!1001 &3206546911346226298
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -591,5 +576,10 @@ CapsuleCollider:
 --- !u!4 &8544966402725789319 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 400004, guid: bc3a659bd68b31b4eb4e711d23f85e15, type: 3}
+  m_PrefabInstance: {fileID: 8544966402725389315}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &8544966402732773731 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 9500000, guid: bc3a659bd68b31b4eb4e711d23f85e15, type: 3}
   m_PrefabInstance: {fileID: 8544966402725389315}
   m_PrefabAsset: {fileID: 0}

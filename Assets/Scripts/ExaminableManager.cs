@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
@@ -13,13 +14,22 @@ public class ExaminableManager : MonoBehaviour
     Quaternion _priorRot;
     Vector3 _priorScale;
 
+    [SerializeField]
+    PlacementManager _placementManager;
+
     void Start()
     {
-        
+        if (_placementManager == null) { 
+            _placementManager = GameObject.FindFirstObjectByType<PlacementManager>();
+
+            if (_placementManager == null ) {
+                Debug.LogError("#### Could not locate Placement Manager.");
+            }
+        }
     }
 
-    Examinable _examinedObject;
-    private bool isExamining;
+    GameObject _examinedObject;
+    private bool isExamining = false;
     private float _rotSpeed = 25f;
 
     private void Update()
@@ -28,7 +38,8 @@ public class ExaminableManager : MonoBehaviour
         {
             // Get first touch
             Touch touch = Input.GetTouch(0);
-            if (touch.phase == TouchPhase.Moved) {
+            if (touch.phase == TouchPhase.Moved)
+            {
                 Vector3 rotation = new Vector3(touch.deltaPosition.x, touch.deltaPosition.y, 0) * _rotSpeed * Time.deltaTime;
                 _examinedObject.transform.Rotate(rotation);
             }
@@ -37,6 +48,7 @@ public class ExaminableManager : MonoBehaviour
 
     public void DeleteSelected()
     {
+        _examinedObject = GetSelectedObject();
         if (_examinedObject != null)
         {
             Destroy(_examinedObject.gameObject);
@@ -44,26 +56,39 @@ public class ExaminableManager : MonoBehaviour
         }
     }
 
-    public void SetExaminedObject(Examinable target)
+    private GameObject GetSelectedObject()
     {
-        Examinable[] objects = FindObjectsOfType<Examinable>();
-        foreach (Examinable obj in objects)
+        Debug.Log($"#### Found {_placementManager.gameObject.transform.childCount} objects");
+        for (int i=0; i < _placementManager.gameObject.transform.childCount; ++i)
         {
+            GameObject obj = _placementManager.gameObject.transform.GetChild(i).gameObject;
+            Debug.Log($"#### {obj.name} is found");
             if (TryGetComponent<ARSelectionInteractable>(out ARSelectionInteractable selection))
             {
-                Debug.Log($"{obj.gameObject.name} Selected: {selection.isSelected}");
+                if (selection.isSelected)
+                {
+                    Debug.Log("#### is selected!");
+                    return obj;
+                }
             }
         }
-        _examinedObject = target;
+        return null;
     }
 
-    public void ClearExaminedObject()
+    public void ToggleExamination()
     {
-        _examinedObject = null;
+        if (isExamining)
+        {
+            Unexamine();
+        } else
+        {
+            PerformExamination();
+        }
     }
 
     public void PerformExamination()
     {
+        _examinedObject = GetSelectedObject();
         if (_examinedObject == null || _examineTarget == null)
         {
             Debug.Log($"Examine failed: Target: {_examinedObject} examineTarget: {_examineTarget}");
@@ -72,19 +97,23 @@ public class ExaminableManager : MonoBehaviour
 
         Debug.Log($"Examining {_examinedObject.gameObject.name}");
 
-        _priorPos = _examinedObject.transform.position;
-        _priorRot = _examinedObject.transform.rotation;
-        _priorScale = _examinedObject.transform.localScale;
-        
-        _examinedObject.transform.position = _examineTarget.position;
-        _examinedObject.transform.parent = _examineTarget;
-        _examinedObject.transform.localScale = _priorScale * _examinedObject.ExamineScaleOffset();
+        // We need to make a copy of the object, make it Examinable,
+        // and make sure all of the Scale/Translate/etc is off
+
+        GameObject _toBeExamined = Instantiate(_examinedObject, _examineTarget.position, Quaternion.identity);
+        _examinedObject.SetActive(false);
+        _toBeExamined.transform.parent = _examineTarget;
+        _toBeExamined.AddComponent<Examinable>();
+        // _examinedObject.transform.localScale = _toBeExamined.transform.localScale * _examinedObject.ExamineScaleOffset();
+
+        // Do we need to disable other things?
 
         isExamining = true;
     }
 
     public void Unexamine()
     {
+        _examinedObject.SetActive(true);
         _examinedObject.transform.position = _priorPos;
         _examinedObject.transform.rotation = _priorRot;
         _examinedObject.transform.localScale = _priorScale;

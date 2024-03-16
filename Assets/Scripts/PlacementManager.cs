@@ -24,7 +24,7 @@ public class PlacementManager : MonoBehaviour
     Hashtable _placedObjects;
 
     [SerializeField] private ARPlacementInteractable _placementInteractable;
-    
+
     // Start is called before the first frame update
     void Start()
     {
@@ -35,11 +35,14 @@ public class PlacementManager : MonoBehaviour
 
     private void ObjectPlaced(ARObjectPlacementEventArgs eventArgs)
     {
-        Debug.Log("Placed object?");
+        Debug.Log("##### Placed object?");
         string objectName = eventArgs?.placementObject?.name;
-        if (objectName != "") {
-            Debug.Log($"Name: {objectName}");
-            _placedObjects[objectName] = eventArgs.placementObject;
+        if (objectName != "")
+        {
+            objectName = objectName.Replace("(Clone)", "");
+            Debug.Log($"##### Placed {objectName}");
+            eventArgs.placementObject.name = objectName;
+            eventArgs.placementObject.transform.parent = this.transform;
         }
     }
 
@@ -54,28 +57,32 @@ public class PlacementManager : MonoBehaviour
 
     }
 
-    public void HandleObject(string name)
+    public void HandleObject(GameObject prefab)
     {
-        if (validElements.Any(x => x.name == name))
+        if (prefab == null)
         {
-            if (_placedObjects.Contains(name))
+            Debug.LogError("#### Attempted to place a null prefab");
+            return;
+        }
+
+        Debug.Log("##### HandleObject " + name);
+
+        Transform found = transform.Find(prefab.name);
+        for (int i = 0; i < transform.childCount; i++) { Debug.Log($"#### Found {transform.GetChild(i).name}"); }
+        if (found != null)
+        {
+            GameObject placed = found.gameObject;
+            Debug.Log($"##### Select {placed.name}");
+            if (placed.TryGetComponent<IXRSelectInteractable>(out IXRSelectInteractable select))
             {
-                GameObject placed = (GameObject)_placedObjects[name];
-                Debug.Log($"Select {placed}");
-                if (placed.TryGetComponent<IXRSelectInteractable>(out IXRSelectInteractable select))
-                {
-                    // Select the item!
-                    _gestureInteractor.StartManualInteraction(select);
-                }
-            } else
-            {
-                GameObject toBePlaced = validElements.First(x => x.name == name).prefab;
-                _placementInteractable.placementPrefab = toBePlaced;
+                // Select the item!
+                _gestureInteractor.StartManualInteraction(select);
             }
         }
         else
         {
-            Debug.LogError($"Invalid object name {name} provided to PlacementManager");
+            Debug.Log($"#### Placing {prefab.name}");
+            _placementInteractable.placementPrefab = prefab;
         }
     }
 }
