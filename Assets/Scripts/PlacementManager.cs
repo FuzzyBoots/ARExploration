@@ -8,27 +8,17 @@ using UnityEngine.XR.Interaction.Toolkit.AR;
 
 public class PlacementManager : MonoBehaviour
 {
-    [System.Serializable]
-    public struct placementEntry
-    {
-        public string name;
-        public GameObject prefab;
-    }
-
-    [SerializeField]
-    private placementEntry[] validElements;
-
     [SerializeField]
     private ARGestureInteractor _gestureInteractor;
 
-    Hashtable _placedObjects;
+    [SerializeField]
+    private ExaminableManager _examinableManager;
 
     [SerializeField] private ARPlacementInteractable _placementInteractable;
 
     // Start is called before the first frame update
     void Start()
     {
-        _placedObjects = new Hashtable();
         ARObjectPlacementEvent aRObjectPlacedEvent = _placementInteractable.objectPlaced;
         aRObjectPlacedEvent.AddListener(ObjectPlaced);
     }
@@ -46,15 +36,41 @@ public class PlacementManager : MonoBehaviour
         }
     }
 
-    public void ResetScene(string sceneName)
+    public GameObject GetSelectedObject()
     {
-        _placedObjects.Clear();
-        SceneManager.LoadScene(sceneName);
+        Debug.Log($"#### Found {transform.childCount} objects");
+        for (int i = 0; i < transform.childCount; ++i)
+        {
+            GameObject obj = transform.GetChild(i).gameObject;
+            Debug.Log($"#### {obj.name} is found");
+            if (obj.TryGetComponent<ARSelectionInteractable>(out ARSelectionInteractable selection))
+            {
+                Debug.Log("#### Found selection interactable");
+                if (selection.isSelected)
+                {
+                    Debug.Log("#### is selected!");
+                    return obj;
+                }
+            }
+        }
+        return null;
     }
 
-    public void RegisterObject()
+    public void DeleteSelected()
     {
+        Debug.Log("#### Entering Delete Selected");
+        GameObject _examinedObject = GetSelectedObject();
+        if (_examinedObject != null)
+        {
+            Destroy(_examinedObject);
+            _examinableManager.Unexamine();
+            Debug.Log($"Still there? {_examinedObject}");
+        }
+    }
 
+    public void ResetScene(string sceneName)
+    {
+        SceneManager.LoadScene(sceneName);
     }
 
     public void HandleObject(GameObject prefab)
@@ -65,7 +81,7 @@ public class PlacementManager : MonoBehaviour
             return;
         }
 
-        Debug.Log("##### HandleObject " + name);
+        Debug.Log("##### HandleObject " + prefab.name);
 
         Transform found = transform.Find(prefab.name);
         for (int i = 0; i < transform.childCount; i++) { Debug.Log($"#### Found {transform.GetChild(i).name}"); }

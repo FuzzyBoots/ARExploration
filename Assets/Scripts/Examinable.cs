@@ -9,7 +9,8 @@ using UnityEngine.XR.Interaction.Toolkit.AR;
 public class Examinable : MonoBehaviour
 {
     [SerializeField] ExaminableManager _manager;
-    [SerializeField] float examineScaleOffset = 1f;
+    [SerializeField] float _examineScaleOffset = 1f;
+    [SerializeField] GameObject _toBeExamined;
 
     // Start is called before the first frame update
     void Start()
@@ -22,5 +23,7 @@ public class Examinable : MonoBehaviour
         }
     }
 
-    public float ExamineScaleOffset() { return examineScaleOffset; }
+    public GameObject ExaminedObject { get { return _toBeExamined; } }
+
+    public float ExamineScaleOffset() { return _examineScaleOffset; }
 }

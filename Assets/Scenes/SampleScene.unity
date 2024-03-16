@@ -2770,8 +2770,8 @@ MonoBehaviour:
   m_OnClick:
     m_PersistentCalls:
       m_Calls:
-      - m_Target: {fileID: 46130139}
-        m_TargetAssemblyTypeName: ExaminableManager, Assembly-CSharp
+      - m_Target: {fileID: 703290053}
+        m_TargetAssemblyTypeName: PlacementManager, Assembly-CSharp
         m_MethodName: DeleteSelected
         m_Mode: 1
         m_Arguments:

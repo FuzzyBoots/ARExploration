@@ -12,6 +12,7 @@ GameObject:
   - component: {fileID: -5768511651372808429}
   - component: {fileID: -338740516189812959}
   - component: {fileID: 8938649961548896531}
+  - component: {fileID: -392369540247953908}
   m_Layer: 0
   m_Name: Fighter
   m_TagString: Untagged
@@ -86,34 +87,10 @@ MonoBehaviour:
       m_Calls: []
   m_SelectEntered:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Examinable, Assembly-CSharp
-        m_MethodName: SetSelection
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_SelectExited:
     m_PersistentCalls:
-      m_Calls:
-      - m_Target: {fileID: 0}
-        m_TargetAssemblyTypeName: Examinable, Assembly-CSharp
-        m_MethodName: RequestUnexamine
-        m_Mode: 1
-        m_Arguments:
-          m_ObjectArgument: {fileID: 0}
-          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
-          m_IntArgument: 0
-          m_FloatArgument: 0
-          m_StringArgument: 
-          m_BoolArgument: 0
-        m_CallState: 2
+      m_Calls: []
   m_FirstFocusEntered:
     m_PersistentCalls:
       m_Calls: []
@@ -386,6 +363,21 @@ MonoBehaviour:
   m_FallbackLayerMask:
     serializedVersion: 2
     m_Bits: 0
+--- !u!114 &-392369540247953908
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 7267706816701244205}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a3517c92d7c9af64ba02dfc57f055d09, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _manager: {fileID: 0}
+  _examineScaleOffset: 1
+  _toBeExamined: {fileID: 6847216450977162510}
 --- !u!1001 &6847216450977260462
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -624,8 +616,37 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents: []
+    m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 9140314448968497165, guid: 2fbaac66b93d0484e944c07464a93350, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 5446704878343195739}
   m_SourcePrefab: {fileID: 100100000, guid: 2fbaac66b93d0484e944c07464a93350, type: 3}
+--- !u!1 &45627732662647233 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 9140314448968497165, guid: 2fbaac66b93d0484e944c07464a93350, type: 3}
+  m_PrefabInstance: {fileID: 9113862594407449036}
+  m_PrefabAsset: {fileID: 0}
+--- !u!65 &5446704878343195739
+BoxCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 45627732662647233}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 3
+  m_Size: {x: 1.0000001, y: 2, z: 1.0000002}
+  m_Center: {x: 0.000000059604645, y: 0, z: -0.00000008940697}
 --- !u!4 &1710748449367110036 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 7622128070319927384, guid: 2fbaac66b93d0484e944c07464a93350, type: 3}
