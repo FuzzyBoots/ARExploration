@@ -8,7 +8,7 @@ using UnityEngine.XR.Interaction.Toolkit.AR;
 [RequireComponent(typeof(ARSelectionInteractable))]
 public class Examinable : MonoBehaviour
 {
-    [SerializeField] ExaminableManager _manager;
+    ExaminableManager _manager;
     [SerializeField] float _examineScaleOffset = 1f;
     [SerializeField] GameObject _toBeExamined;
 

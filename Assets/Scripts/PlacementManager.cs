@@ -16,11 +16,18 @@ public class PlacementManager : MonoBehaviour
 
     [SerializeField] private ARPlacementInteractable _placementInteractable;
 
+    [SerializeField] UIManager _uiManager;
+
     // Start is called before the first frame update
     void Start()
     {
         ARObjectPlacementEvent aRObjectPlacedEvent = _placementInteractable.objectPlaced;
         aRObjectPlacedEvent.AddListener(ObjectPlaced);
+
+        if (_uiManager == null)
+        {
+            _uiManager = FindAnyObjectByType<UIManager>();
+        }
     }
 
     private void ObjectPlaced(ARObjectPlacementEventArgs eventArgs)
@@ -31,6 +38,7 @@ public class PlacementManager : MonoBehaviour
         {
             objectName = objectName.Replace("(Clone)", "");
             Debug.Log($"##### Placed {objectName}");
+            _uiManager.DisablePlacementButton(objectName);
             eventArgs.placementObject.name = objectName;
             eventArgs.placementObject.transform.parent = this.transform;
         }
@@ -62,6 +70,7 @@ public class PlacementManager : MonoBehaviour
         GameObject _examinedObject = GetSelectedObject();
         if (_examinedObject != null)
         {
+            _uiManager.EnablePlacementButton( _examinedObject.name );
             Destroy(_examinedObject);
             _examinableManager.Unexamine();
             Debug.Log($"Still there? {_examinedObject}");
